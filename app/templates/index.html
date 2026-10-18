@@ -1,6 +1,33 @@
-{% extends "base.html" %}{% block content %}
-<section class="hero"><p class="eyebrow">FINTRUST · CUSTOMER OPERATIONS</p><h1>Every dispute deserves<br><span>a clear resolution.</span></h1>
-<p class="lead">Track payment disputes, communicate with support, and follow your case through resolution.</p>
-<div class="actions"><a class="button" href="/register">Open a support account</a><a class="button secondary" href="/login">Sign in</a></div></section>
-<section class="cards"><article><h3>Case tracking</h3><p>Follow ticket status and updates in one place.</p></article><article><h3>Secure support</h3><p>Keep customer correspondence attached to each case.</p></article><article><h3>Operations tools</h3><p>Internal support utilities help staff diagnose service issues.</p></article></section>
+{% extends "base.html" %}
+{% block title %}FinTrust Support | LedgerLeak{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">FinTrust · Customer operations</p>
+  <h1>Every dispute deserves<br><span>a clear resolution.</span></h1>
+  <p class="lead">Track payment disputes, communicate with support, and follow your case through resolution—all from one simple workspace.</p>
+  <div class="actions">
+    <a class="button" href="/register">Open a support account <span aria-hidden="true">→</span></a>
+    <a class="button secondary" href="/login">Sign in</a>
+  </div>
+</section>
+<section class="cards" aria-label="Portal features">
+  <article>
+    <p class="eyebrow">01 · Track</p>
+    <h3>Case tracking</h3>
+    <p>Follow ticket status and updates in one place, without losing the details that matter.</p>
+    <a href="/register">Get started <span aria-hidden="true">→</span></a>
+  </article>
+  <article>
+    <p class="eyebrow">02 · Connect</p>
+    <h3>Support that stays organized</h3>
+    <p>Keep your customer correspondence attached to each support case.</p>
+    <a href="/login">View your workspace <span aria-hidden="true">→</span></a>
+  </article>
+  <article>
+    <p class="eyebrow">03 · Diagnose</p>
+    <h3>Operations tools</h3>
+    <p>Support utilities help investigate service issues in this training environment.</p>
+    <a href="/login">Sign in to continue <span aria-hidden="true">→</span></a>
+  </article>
+</section>
 {% endblock %}
