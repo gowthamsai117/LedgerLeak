@@ -5,40 +5,42 @@
   <div>
     <p class="eyebrow">FinTrust · Customer workspace</p>
     <h1>Good to see you, {{ username }}.</h1>
-    <p class="lead">Here’s the latest overview of your support activity.</p>
+    <p class="lead">A clear view of your support cases, status, and next steps.</p>
   </div>
   <a class="button" href="/tickets/new"><span aria-hidden="true">＋</span> New support ticket</a>
 </section>
 
 <section class="metric-grid" aria-label="Support summary">
   <article class="metric-card metric-primary">
-    <div class="metric-top"><span class="metric-icon">▤</span><span class="metric-label">All cases</span></div>
+    <div class="metric-top"><span class="metric-icon" aria-hidden="true">▤</span><span class="metric-label">All cases</span></div>
     <p class="metric-number">{{ stats.total }}</p>
     <p class="metric-caption">Support requests linked to your account</p>
+    <a class="metric-link" href="/tickets">View your cases <span aria-hidden="true">→</span></a>
   </article>
   <article class="metric-card">
-    <div class="metric-top"><span class="metric-icon icon-open">◷</span><span class="metric-label">Open cases</span></div>
+    <div class="metric-top"><span class="metric-icon icon-open" aria-hidden="true">◷</span><span class="metric-label">Open cases</span></div>
     <p class="metric-number">{{ stats.open }}</p>
-    <p class="metric-caption">Waiting for support review</p>
+    <p class="metric-caption">Awaiting review or next action</p>
   </article>
   <article class="metric-card">
-    <div class="metric-top"><span class="metric-icon icon-progress">↻</span><span class="metric-label">In progress</span></div>
+    <div class="metric-top"><span class="metric-icon icon-progress" aria-hidden="true">↻</span><span class="metric-label">In progress</span></div>
     <p class="metric-number">{{ stats.in_progress }}</p>
     <p class="metric-caption">Currently being reviewed</p>
   </article>
   <article class="metric-card">
-    <div class="metric-top"><span class="metric-icon icon-resolved">✓</span><span class="metric-label">Resolved</span></div>
+    <div class="metric-top"><span class="metric-icon icon-resolved" aria-hidden="true">✓</span><span class="metric-label">Resolved</span></div>
     <p class="metric-number">{{ stats.resolved }}</p>
     <p class="metric-caption">Closed or completed cases</p>
   </article>
 </section>
 
-<section class="dashboard-grid">
+<section class="dashboard-grid" aria-label="Ticket analytics">
   <article class="panel status-panel">
     <div class="panel-heading">
-      <div><p class="eyebrow">Case analytics</p><h2>Ticket status</h2></div>
+      <div><p class="eyebrow">Case analytics</p><h2>Ticket status</h2><p class="panel-subtitle">A breakdown of your current cases</p></div>
       <a href="/tickets">View all <span aria-hidden="true">→</span></a>
     </div>
+    {% if stats.total %}
     <div class="status-visual">
       <div class="donut-chart" style="background: {{ stats.donut_style }}" role="img" aria-label="{{ stats.total }} total tickets: {{ stats.open }} open, {{ stats.in_progress }} in progress, {{ stats.resolved }} resolved, {{ stats.other }} other">
         <div class="donut-hole"><strong>{{ stats.total }}</strong><span>Total cases</span></div>
@@ -50,66 +52,149 @@
         {% if stats.other %}<div><span class="legend-dot dot-other"></span><span>Other</span><strong>{{ stats.other }}</strong></div>{% endif %}
       </div>
     </div>
-    <p class="chart-footnote">Visualized from the current status of your tickets.</p>
+    <p class="chart-footnote">Based on ticket statuses currently saved to your account.</p>
+    {% else %}
+    <div class="chart-empty"><span class="empty-chart-icon" aria-hidden="true">◷</span><strong>Your analytics will appear here</strong><span>Create a support ticket to start tracking your case status.</span><a class="button" href="/tickets/new">Create your first ticket</a></div>
+    {% endif %}
   </article>
 
   <article class="panel breakdown-panel">
-    <div class="panel-heading"><div><p class="eyebrow">Workload overview</p><h2>Case distribution</h2></div></div>
+    <div class="panel-heading"><div><p class="eyebrow">Workload overview</p><h2>Case distribution</h2><p class="panel-subtitle">Share of your total tickets</p></div></div>
     <div class="bar-metric">
-      <div class="bar-label"><span>Open</span><strong>{{ stats.open }} <small>{{ stats.open_pct }}%</small></strong></div>
+      <div class="bar-label"><span><span class="legend-dot dot-open"></span> Open</span><strong>{{ stats.open }} <small>{{ stats.open_pct }}%</small></strong></div>
       <div class="bar-track"><span class="bar-fill bar-open" style="width: {{ stats.open_pct }}%"></span></div>
     </div>
     <div class="bar-metric">
-      <div class="bar-label"><span>In progress</span><strong>{{ stats.in_progress }} <small>{{ stats.in_progress_pct }}%</small></strong></div>
+      <div class="bar-label"><span><span class="legend-dot dot-progress"></span> In progress</span><strong>{{ stats.in_progress }} <small>{{ stats.in_progress_pct }}%</small></strong></div>
       <div class="bar-track"><span class="bar-fill bar-progress" style="width: {{ stats.in_progress_pct }}%"></span></div>
     </div>
     <div class="bar-metric">
-      <div class="bar-label"><span>Resolved</span><strong>{{ stats.resolved }} <small>{{ stats.resolved_pct }}%</small></strong></div>
+      <div class="bar-label"><span><span class="legend-dot dot-resolved"></span> Resolved</span><strong>{{ stats.resolved }} <small>{{ stats.resolved_pct }}%</small></strong></div>
       <div class="bar-track"><span class="bar-fill bar-resolved" style="width: {{ stats.resolved_pct }}%"></span></div>
     </div>
     {% if stats.other %}
     <div class="bar-metric">
-      <div class="bar-label"><span>Other statuses</span><strong>{{ stats.other }} <small>{{ stats.other_pct }}%</small></strong></div>
+      <div class="bar-label"><span><span class="legend-dot dot-other"></span> Other statuses</span><strong>{{ stats.other }} <small>{{ stats.other_pct }}%</small></strong></div>
       <div class="bar-track"><span class="bar-fill bar-other" style="width: {{ stats.other_pct }}%"></span></div>
     </div>
     {% endif %}
-    {% if stats.total == 0 %}
-      <div class="chart-empty"><strong>Your analytics will appear here.</strong><span>Create a support ticket to start tracking case status.</span></div>
-    {% else %}
-      <div class="insight-box"><span class="insight-icon">✦</span><div><strong>Your support snapshot</strong><p>{% if stats.open %}You have {{ stats.open }} open {{ 'case' if stats.open == 1 else 'cases' }} that may need follow-up.{% elif stats.in_progress %}Your cases are currently being reviewed.{% else %}Your cases are resolved. Need anything else?{% endif %}</p></div></div>
-    {% endif %}
+    <div class="insight-box">
+      <span class="insight-icon" aria-hidden="true">✦</span>
+      <div><strong>Your support snapshot</strong><p>{% if stats.total == 0 %}Create a ticket whenever you need help with a payment or account issue.{% elif stats.open %}You have {{ stats.open }} open {{ 'case' if stats.open == 1 else 'cases' }} that may need follow-up.{% elif stats.in_progress %}Your cases are currently being reviewed. Open a ticket to check its details.{% elif stats.resolved == stats.total %}All your tracked cases are resolved. You can open a new ticket if you need more help.{% else %}Your current case statuses are shown above. Open a ticket to review its details.{% endif %}</p></div>
+    </div>
   </article>
 </section>
 
 <section class="panel recent-panel">
-  <div class="panel-heading">
-    <div><p class="eyebrow">Your activity</p><h2>Recent support tickets</h2></div>
+  <div class="panel-heading recent-heading">
+    <div><p class="eyebrow">Your activity</p><h2>Recent support tickets</h2><p class="panel-subtitle">Your five most recently created ticket records</p></div>
     <a href="/tickets">All tickets <span aria-hidden="true">→</span></a>
   </div>
   {% if recent_tickets %}
+    <div class="table-tools">
+      <label class="table-search" for="ticket-search"><span aria-hidden="true">⌕</span><input id="ticket-search" type="search" placeholder="Search subject or reference…" autocomplete="off"></label>
+      <label class="filter-label" for="ticket-status-filter"><span class="sr-only">Filter tickets by status</span>
+        <select id="ticket-status-filter">
+          <option value="all">All statuses</option>
+          <option value="open">Open</option>
+          <option value="progress">In progress</option>
+          <option value="resolved">Resolved</option>
+          <option value="other">Other</option>
+        </select>
+      </label>
+      <button class="button ghost export-button" id="export-tickets" type="button">Export visible CSV <span aria-hidden="true">↓</span></button>
+    </div>
+    <p class="table-result-count" id="ticket-result-count" aria-live="polite">Showing {{ recent_tickets|length }} of {{ stats.total }} recent tickets</p>
     <div class="recent-table-wrap">
-      <table class="recent-table">
-        <thead><tr><th>Ticket</th><th>Reference</th><th>Status</th><th></th></tr></thead>
+      <table class="recent-table" id="recent-tickets-table">
+        <thead><tr><th>Ticket</th><th>Reference</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
         <tbody>
           {% for ticket in recent_tickets %}
-          <tr>
+          {% set normalized_status = (ticket.status or '')|lower|replace('-', ' ')|replace('_', ' ') %}
+          {% if normalized_status in ['open', 'new', 'pending'] %}{% set status_group = 'open' %}
+          {% elif normalized_status in ['in progress', 'in review', 'processing'] %}{% set status_group = 'progress' %}
+          {% elif normalized_status in ['resolved', 'closed', 'complete', 'completed'] %}{% set status_group = 'resolved' %}
+          {% else %}{% set status_group = 'other' %}{% endif %}
+          <tr data-status="{{ status_group }}" data-search="{{ (ticket.subject ~ ' FT-' ~ ('%04d'|format(ticket.id)) ~ ' ' ~ ticket.status)|lower }}">
             <td><a class="recent-title" href="/ticket/{{ ticket.id }}">{{ ticket.subject }}</a></td>
             <td><span class="ticket-reference">FT-{{ "%04d"|format(ticket.id) }}</span></td>
-            <td><span class="status">{{ ticket.status }}</span></td>
+            <td><span class="status status-{{ status_group }}">{{ ticket.status }}</span></td>
             <td><a class="row-action" href="/ticket/{{ ticket.id }}">Details <span aria-hidden="true">→</span></a></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      <div class="table-no-results" id="ticket-no-results" hidden>No tickets match your search. Try a different keyword or status.</div>
     </div>
   {% else %}
-    <div class="chart-empty"><strong>No support tickets yet</strong><span>Create your first ticket to see activity here.</span><a class="button" href="/tickets/new">Create a ticket</a></div>
+    <div class="chart-empty"><span class="empty-chart-icon" aria-hidden="true">▤</span><strong>No support tickets yet</strong><span>Create your first ticket and track its progress here.</span><a class="button" href="/tickets/new">Create a ticket</a></div>
   {% endif %}
 </section>
 
-<section class="dashboard-quick-links" aria-label="Quick actions">
-  <a href="/tickets/new"><span class="quick-icon">＋</span><span><strong>Open a new case</strong><small>Tell support what happened</small></span><span class="quick-arrow">→</span></a>
-  <a href="/tickets"><span class="quick-icon">▤</span><span><strong>Browse your cases</strong><small>Review previous requests</small></span><span class="quick-arrow">→</span></a>
-  <a href="/tools/preview"><span class="quick-icon">⌁</span><span><strong>URL preview tool</strong><small>Training environment utility</small></span><span class="quick-arrow">→</span></a>
+<section class="support-next-steps">
+  <div class="next-steps-intro"><p class="eyebrow">How it works</p><h2>Your support journey</h2><p>Keep the information for each dispute together, from submission to resolution.</p></div>
+  <div class="journey-step"><span class="journey-number">01</span><div><strong>Submit your case</strong><p>Describe the payment or account issue and create a ticket.</p></div></div>
+  <div class="journey-step"><span class="journey-number">02</span><div><strong>Track the status</strong><p>Return to your dashboard or tickets page to review saved case details.</p></div></div>
+  <div class="journey-step"><span class="journey-number">03</span><div><strong>Follow up when needed</strong><p>Open the ticket details or create another support request.</p></div></div>
 </section>
+
+<section class="dashboard-quick-links" aria-label="Quick actions">
+  <a href="/tickets/new"><span class="quick-icon" aria-hidden="true">＋</span><span><strong>Open a new case</strong><small>Tell support what happened</small></span><span class="quick-arrow" aria-hidden="true">→</span></a>
+  <a href="/tickets"><span class="quick-icon" aria-hidden="true">▤</span><span><strong>Browse your cases</strong><small>Review previous requests</small></span><span class="quick-arrow" aria-hidden="true">→</span></a>
+  <a href="/tools/preview"><span class="quick-icon" aria-hidden="true">⌁</span><span><strong>URL preview tool</strong><small>Training environment utility</small></span><span class="quick-arrow" aria-hidden="true">→</span></a>
+</section>
+
+<script>
+(() => {
+  const table = document.getElementById('recent-tickets-table');
+  if (!table) return;
+  const search = document.getElementById('ticket-search');
+  const statusFilter = document.getElementById('ticket-status-filter');
+  const resultCount = document.getElementById('ticket-result-count');
+  const noResults = document.getElementById('ticket-no-results');
+  const exportButton = document.getElementById('export-tickets');
+  const rows = Array.from(table.querySelectorAll('tbody tr'));
+  const totalCases = {{ stats.total|int }};
+
+  function filterRows() {
+    const term = search.value.trim().toLowerCase();
+    const status = statusFilter.value;
+    let visible = 0;
+    rows.forEach((row) => {
+      const matchesTerm = row.dataset.search.includes(term);
+      const matchesStatus = status === 'all' || row.dataset.status === status;
+      const show = matchesTerm && matchesStatus;
+      row.hidden = !show;
+      if (show) visible += 1;
+    });
+    resultCount.textContent = 'Showing ' + visible + ' of ' + rows.length + ' recent tickets (' + totalCases + ' total)';
+    noResults.hidden = visible !== 0;
+  }
+
+  search.addEventListener('input', filterRows);
+  statusFilter.addEventListener('change', filterRows);
+  exportButton.addEventListener('click', () => {
+    const visibleRows = rows.filter((row) => !row.hidden);
+    const quote = (value) => '"' + String(value).replace(/"/g, '""') + '"';
+    const csvRows = [['Ticket', 'Reference', 'Status']];
+    visibleRows.forEach((row) => {
+      csvRows.push([
+        row.querySelector('.recent-title').textContent.trim(),
+        row.querySelector('.ticket-reference').textContent.trim(),
+        row.querySelector('.status').textContent.trim()
+      ]);
+    });
+    const csv = csvRows.map((row) => row.map(quote).join(',')).join('\r\n');
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'fintrust-visible-tickets.csv';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  });
+})();
+</script>
 {% endblock %}
