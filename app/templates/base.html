@@ -1,10 +1,39 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>{% block title %}LedgerLeak | FinTrust{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
-<body><header class="top"><a class="brand" href="/">FinTrust <span>support</span></a><nav>
-{% if logged_in %}<a href="/dashboard">Dashboard</a><a href="/tickets">Tickets</a><a href="/tools/preview">URL Preview</a><a href="/logout">Sign out ({{ username }})</a>
-{% else %}<a href="/login">Sign in</a><a href="/register">Create account</a>{% endif %}
-</nav></header><main class="container">
-{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category,message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}{% endif %}{% endwith %}
-{% block content %}{% endblock %}</main><footer>FinTrust Support Portal · Internal training environment</footer></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a2d">
+  <meta name="description" content="FinTrust customer support and dispute tracking portal.">
+  <title>{% block title %}LedgerLeak | FinTrust{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="top">
+    <a class="brand" href="/" aria-label="FinTrust Support home">FinTrust <span>support</span></a>
+    <nav aria-label="Main navigation">
+      {% if logged_in %}
+        <a href="/dashboard">Dashboard</a>
+        <a href="/tickets">Tickets</a>
+        <a href="/tools/preview">URL Preview</a>
+        <a href="/logout">Sign out ({{ username }})</a>
+      {% else %}
+        <a href="/login">Sign in</a>
+        <a href="/register">Create account</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main id="main-content" class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}" role="{% if category == 'error' %}alert{% else %}status{% endif %}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer>FinTrust Support Portal <span aria-hidden="true">·</span> Internal training environment</footer>
+</body>
+</html>
