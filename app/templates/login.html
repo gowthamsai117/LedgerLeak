@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Account | LedgerLeak{% endblock %}{% block content %}
+<section class="form-card"><p class="eyebrow">FINTRUST ACCOUNT</p><h1>{{ 'Create account' if mode == 'register' else 'Welcome back' }}</h1>
+<form method="post"><label>Username<input name="username" required minlength="3" autocomplete="username"></label>
+<label>Password<input type="password" name="password" required {% if mode == 'register' %}minlength="10"{% endif %} autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}"></label>
+<button class="button" type="submit">{{ 'Register' if mode == 'register' else 'Sign in' }}</button></form>
+<p>{% if mode == 'register' %}Already registered? <a href="/login">Sign in</a>{% else %}New to FinTrust? <a href="/register">Create an account</a>{% endif %}</p></section>
+{% endblock %}
