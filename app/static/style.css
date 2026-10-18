@@ -253,3 +253,36 @@ footer { text-align: center; color: #7a879b; border-top: 1px solid var(--line); 
   .recent-heading { flex-direction:column; }
   .recent-table { min-width:530px; }
 }
+
+
+/* Fix secondary/ghost links inside forms and action rows */
+.container a.button.ghost,
+.container a.button.ghost:visited {
+  color: var(--ink);
+  background: #fff;
+  border-color: var(--line);
+  box-shadow: none;
+}
+.container a.button.ghost:hover,
+.container a.button.ghost:focus-visible {
+  color: var(--brand-dark);
+  background: #f9f8ff;
+  border-color: #c9c3ff;
+}
+form .actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 2px;
+}
+form .actions > .button {
+  width: auto;
+  min-width: 132px;
+}
+@media (max-width: 520px) {
+  form .actions > .button {
+    width: 100%;
+  }
+}
