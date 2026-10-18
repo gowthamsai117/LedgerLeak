@@ -108,3 +108,6 @@ footer { text-align: center; color: #7a879b; border-top: 1px solid var(--line); 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+.skip-link { position: absolute; left: 12px; top: -60px; z-index: 30; padding: 10px 14px; background: #fff; color: var(--ink); border: 2px solid var(--brand); border-radius: 9px; font-weight: 700; }
+.skip-link:focus { top: 12px; }
