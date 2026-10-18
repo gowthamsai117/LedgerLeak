@@ -1,2 +1,28 @@
-{% extends "base.html" %}{% block content %}<div class="page-head"><div><p class="eyebrow">CUSTOMER OPERATIONS</p><h1>Your tickets</h1></div><a class="button" href="/tickets/new">New ticket</a></div>
-{% if tickets %}<div class="ticket-list">{% for ticket in tickets %}<article><div><span class="status">{{ ticket.status }}</span><h3><a href="/ticket/{{ ticket.id }}">{{ ticket.subject }}</a></h3><p>{{ ticket.body }}</p></div><a href="/ticket/{{ ticket.id }}">View →</a></article>{% endfor %}</div>{% else %}<p>No tickets yet.</p>{% endif %}{% endblock %}
+{% extends "base.html" %}
+{% block title %}Your tickets | LedgerLeak{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><p class="eyebrow">Customer operations</p><h1>Your tickets</h1><p class="lead">Track the requests you've sent to the FinTrust support team.</p></div>
+  <a class="button" href="/tickets/new"><span aria-hidden="true">＋</span> New ticket</a>
+</div>
+{% if tickets %}
+  <div class="ticket-list">
+    {% for ticket in tickets %}
+      <article>
+        <div>
+          <span class="status">{{ ticket.status }}</span>
+          <h3><a href="/ticket/{{ ticket.id }}">{{ ticket.subject }}</a></h3>
+          <p>{{ ticket.body }}</p>
+        </div>
+        <a href="/ticket/{{ ticket.id }}">View details <span aria-hidden="true">→</span></a>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <section class="empty-state">
+    <h2>No tickets yet</h2>
+    <p>When you create a support request, it will appear here.</p>
+    <a class="button" href="/tickets/new">Create your first ticket <span aria-hidden="true">→</span></a>
+  </section>
+{% endif %}
+{% endblock %}
