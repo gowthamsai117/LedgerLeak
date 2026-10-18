@@ -113,8 +113,64 @@ def logout():
 @login_required
 def dashboard():
     with db() as con:
-        count = con.execute("SELECT COUNT(*) FROM tickets WHERE owner_id=?", (session["user_id"],)).fetchone()[0]
-    return render_template("dashboard.html", ticket_count=count, role=session.get("role", "customer"))
+        count = con.execute(
+            "SELECT COUNT(*) FROM tickets WHERE owner_id=?", (session["user_id"],)
+        ).fetchone()[0]
+        status_rows = con.execute(
+            "SELECT status, COUNT(*) AS amount FROM tickets WHERE owner_id=? GROUP BY status",
+            (session["user_id"],)
+        ).fetchall()
+        recent_tickets = con.execute(
+            "SELECT id, subject, status FROM tickets WHERE owner_id=? ORDER BY id DESC LIMIT 5",
+            (session["user_id"],)
+        ).fetchall()
+
+    # Build dashboard visualizations from the signed-in customer's actual tickets.
+    counts = {"open": 0, "in_progress": 0, "resolved": 0, "other": 0}
+    for row in status_rows:
+        status = (row["status"] or "").strip().lower().replace("-", " ").replace("_", " ")
+        amount = row["amount"]
+        if status in ("open", "new", "pending"):
+            counts["open"] += amount
+        elif status in ("in progress", "in review", "processing"):
+            counts["in_progress"] += amount
+        elif status in ("resolved", "closed", "complete", "completed"):
+            counts["resolved"] += amount
+        else:
+            counts["other"] += amount
+
+    def percent(value):
+        return round((value / count) * 100, 1) if count else 0
+
+    stats = {
+        "total": count,
+        "open": counts["open"],
+        "in_progress": counts["in_progress"],
+        "resolved": counts["resolved"],
+        "other": counts["other"],
+        "open_pct": percent(counts["open"]),
+        "in_progress_pct": percent(counts["in_progress"]),
+        "resolved_pct": percent(counts["resolved"]),
+        "other_pct": percent(counts["other"]),
+    }
+    if count:
+        open_end = counts["open"] / count * 360
+        progress_end = open_end + counts["in_progress"] / count * 360
+        resolved_end = progress_end + counts["resolved"] / count * 360
+        stats["donut_style"] = (
+            "conic-gradient(#5547d9 0deg {0}deg, #e6a23c {0}deg {1}deg, "
+            "#159a72 {1}deg {2}deg, #a7b2c4 {2}deg 360deg)"
+        ).format(round(open_end, 2), round(progress_end, 2), round(resolved_end, 2))
+    else:
+        stats["donut_style"] = "conic-gradient(#e7ebf3 0deg 360deg)"
+
+    return render_template(
+        "dashboard.html",
+        ticket_count=count,
+        stats=stats,
+        recent_tickets=recent_tickets,
+        role=session.get("role", "customer"),
+    )
 
 
 @app.route("/tickets")
