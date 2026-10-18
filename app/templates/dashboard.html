@@ -1,27 +1,115 @@
 {% extends "base.html" %}
 {% block title %}Dashboard | LedgerLeak{% endblock %}
 {% block content %}
-<p class="eyebrow">Customer workspace</p>
-<h1>Your dashboard</h1>
-<p class="lead">Welcome, {{ username }}. Pick up where you left off or open a new support ticket.</p>
-<section class="cards" aria-label="Dashboard shortcuts">
-  <article>
-    <p class="eyebrow">Your cases</p>
-    <h2>{{ ticket_count }} <span style="font-size:.9rem;font-weight:500;color:var(--muted)">{{ 'ticket' if ticket_count == 1 else 'tickets' }}</span></h2>
-    <p>Review the status and details of your support requests.</p>
-    <a class="button" href="/tickets">View tickets <span aria-hidden="true">→</span></a>
+<section class="dashboard-heading">
+  <div>
+    <p class="eyebrow">FinTrust · Customer workspace</p>
+    <h1>Good to see you, {{ username }}.</h1>
+    <p class="lead">Here’s the latest overview of your support activity.</p>
+  </div>
+  <a class="button" href="/tickets/new"><span aria-hidden="true">＋</span> New support ticket</a>
+</section>
+
+<section class="metric-grid" aria-label="Support summary">
+  <article class="metric-card metric-primary">
+    <div class="metric-top"><span class="metric-icon">▤</span><span class="metric-label">All cases</span></div>
+    <p class="metric-number">{{ stats.total }}</p>
+    <p class="metric-caption">Support requests linked to your account</p>
   </article>
-  <article>
-    <p class="eyebrow">Need help?</p>
-    <h3>Tell us what happened</h3>
-    <p>Share the details of your dispute so it can be tracked.</p>
-    <a class="button secondary" href="/tickets/new">Create a ticket <span aria-hidden="true">→</span></a>
+  <article class="metric-card">
+    <div class="metric-top"><span class="metric-icon icon-open">◷</span><span class="metric-label">Open cases</span></div>
+    <p class="metric-number">{{ stats.open }}</p>
+    <p class="metric-caption">Waiting for support review</p>
   </article>
-  <article>
-    <p class="eyebrow">Operations</p>
-    <h3>URL preview tool</h3>
-    <p>Open the preview utility for the lab investigation workflow.</p>
-    <a class="button ghost" href="/tools/preview">Open tool <span aria-hidden="true">→</span></a>
+  <article class="metric-card">
+    <div class="metric-top"><span class="metric-icon icon-progress">↻</span><span class="metric-label">In progress</span></div>
+    <p class="metric-number">{{ stats.in_progress }}</p>
+    <p class="metric-caption">Currently being reviewed</p>
   </article>
+  <article class="metric-card">
+    <div class="metric-top"><span class="metric-icon icon-resolved">✓</span><span class="metric-label">Resolved</span></div>
+    <p class="metric-number">{{ stats.resolved }}</p>
+    <p class="metric-caption">Closed or completed cases</p>
+  </article>
+</section>
+
+<section class="dashboard-grid">
+  <article class="panel status-panel">
+    <div class="panel-heading">
+      <div><p class="eyebrow">Case analytics</p><h2>Ticket status</h2></div>
+      <a href="/tickets">View all <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="status-visual">
+      <div class="donut-chart" style="background: {{ stats.donut_style }}" role="img" aria-label="{{ stats.total }} total tickets: {{ stats.open }} open, {{ stats.in_progress }} in progress, {{ stats.resolved }} resolved, {{ stats.other }} other">
+        <div class="donut-hole"><strong>{{ stats.total }}</strong><span>Total cases</span></div>
+      </div>
+      <div class="chart-legend">
+        <div><span class="legend-dot dot-open"></span><span>Open</span><strong>{{ stats.open }}</strong></div>
+        <div><span class="legend-dot dot-progress"></span><span>In progress</span><strong>{{ stats.in_progress }}</strong></div>
+        <div><span class="legend-dot dot-resolved"></span><span>Resolved</span><strong>{{ stats.resolved }}</strong></div>
+        {% if stats.other %}<div><span class="legend-dot dot-other"></span><span>Other</span><strong>{{ stats.other }}</strong></div>{% endif %}
+      </div>
+    </div>
+    <p class="chart-footnote">Visualized from the current status of your tickets.</p>
+  </article>
+
+  <article class="panel breakdown-panel">
+    <div class="panel-heading"><div><p class="eyebrow">Workload overview</p><h2>Case distribution</h2></div></div>
+    <div class="bar-metric">
+      <div class="bar-label"><span>Open</span><strong>{{ stats.open }} <small>{{ stats.open_pct }}%</small></strong></div>
+      <div class="bar-track"><span class="bar-fill bar-open" style="width: {{ stats.open_pct }}%"></span></div>
+    </div>
+    <div class="bar-metric">
+      <div class="bar-label"><span>In progress</span><strong>{{ stats.in_progress }} <small>{{ stats.in_progress_pct }}%</small></strong></div>
+      <div class="bar-track"><span class="bar-fill bar-progress" style="width: {{ stats.in_progress_pct }}%"></span></div>
+    </div>
+    <div class="bar-metric">
+      <div class="bar-label"><span>Resolved</span><strong>{{ stats.resolved }} <small>{{ stats.resolved_pct }}%</small></strong></div>
+      <div class="bar-track"><span class="bar-fill bar-resolved" style="width: {{ stats.resolved_pct }}%"></span></div>
+    </div>
+    {% if stats.other %}
+    <div class="bar-metric">
+      <div class="bar-label"><span>Other statuses</span><strong>{{ stats.other }} <small>{{ stats.other_pct }}%</small></strong></div>
+      <div class="bar-track"><span class="bar-fill bar-other" style="width: {{ stats.other_pct }}%"></span></div>
+    </div>
+    {% endif %}
+    {% if stats.total == 0 %}
+      <div class="chart-empty"><strong>Your analytics will appear here.</strong><span>Create a support ticket to start tracking case status.</span></div>
+    {% else %}
+      <div class="insight-box"><span class="insight-icon">✦</span><div><strong>Your support snapshot</strong><p>{% if stats.open %}You have {{ stats.open }} open {{ 'case' if stats.open == 1 else 'cases' }} that may need follow-up.{% elif stats.in_progress %}Your cases are currently being reviewed.{% else %}Your cases are resolved. Need anything else?{% endif %}</p></div></div>
+    {% endif %}
+  </article>
+</section>
+
+<section class="panel recent-panel">
+  <div class="panel-heading">
+    <div><p class="eyebrow">Your activity</p><h2>Recent support tickets</h2></div>
+    <a href="/tickets">All tickets <span aria-hidden="true">→</span></a>
+  </div>
+  {% if recent_tickets %}
+    <div class="recent-table-wrap">
+      <table class="recent-table">
+        <thead><tr><th>Ticket</th><th>Reference</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+          {% for ticket in recent_tickets %}
+          <tr>
+            <td><a class="recent-title" href="/ticket/{{ ticket.id }}">{{ ticket.subject }}</a></td>
+            <td><span class="ticket-reference">FT-{{ "%04d"|format(ticket.id) }}</span></td>
+            <td><span class="status">{{ ticket.status }}</span></td>
+            <td><a class="row-action" href="/ticket/{{ ticket.id }}">Details <span aria-hidden="true">→</span></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="chart-empty"><strong>No support tickets yet</strong><span>Create your first ticket to see activity here.</span><a class="button" href="/tickets/new">Create a ticket</a></div>
+  {% endif %}
+</section>
+
+<section class="dashboard-quick-links" aria-label="Quick actions">
+  <a href="/tickets/new"><span class="quick-icon">＋</span><span><strong>Open a new case</strong><small>Tell support what happened</small></span><span class="quick-arrow">→</span></a>
+  <a href="/tickets"><span class="quick-icon">▤</span><span><strong>Browse your cases</strong><small>Review previous requests</small></span><span class="quick-arrow">→</span></a>
+  <a href="/tools/preview"><span class="quick-icon">⌁</span><span><strong>URL preview tool</strong><small>Training environment utility</small></span><span class="quick-arrow">→</span></a>
 </section>
 {% endblock %}
