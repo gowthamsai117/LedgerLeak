@@ -1,0 +1,1 @@
+{% extends "base.html" %}{% block content %}<p class="eyebrow">CASE #{{ ticket.id }}</p><h1>{{ ticket.subject }}</h1><span class="status">{{ ticket.status }}</span><article class="ticket-body"><h3>Customer message</h3><p>{{ ticket.body }}</p></article><p><a href="/tickets">← Back to tickets</a></p>{% endblock %}
