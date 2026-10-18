@@ -1,2 +1,27 @@
-{% extends "base.html" %}{% block content %}<p class="eyebrow">CUSTOMER WORKSPACE</p><h1>Your dashboard</h1><p class="lead">Welcome, {{ username }}. Review your cases or open a new support ticket.</p>
-<section class="cards"><article><p class="eyebrow">YOUR CASES</p><h2>{{ ticket_count }}</h2><a href="/tickets">View tickets →</a></article><article><h3>Need help?</h3><p>Send our support team the details of your dispute.</p><a href="/tickets/new">Create a ticket →</a></article><article><h3>URL preview tool</h3><p>Operations preview utility available for lab investigation.</p><a href="/tools/preview">Open tool →</a></article></section>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Dashboard | LedgerLeak{% endblock %}
+{% block content %}
+<p class="eyebrow">Customer workspace</p>
+<h1>Your dashboard</h1>
+<p class="lead">Welcome, {{ username }}. Pick up where you left off or open a new support ticket.</p>
+<section class="cards" aria-label="Dashboard shortcuts">
+  <article>
+    <p class="eyebrow">Your cases</p>
+    <h2>{{ ticket_count }} <span style="font-size:.9rem;font-weight:500;color:var(--muted)">{{ 'ticket' if ticket_count == 1 else 'tickets' }}</span></h2>
+    <p>Review the status and details of your support requests.</p>
+    <a class="button" href="/tickets">View tickets <span aria-hidden="true">→</span></a>
+  </article>
+  <article>
+    <p class="eyebrow">Need help?</p>
+    <h3>Tell us what happened</h3>
+    <p>Share the details of your dispute so it can be tracked.</p>
+    <a class="button secondary" href="/tickets/new">Create a ticket <span aria-hidden="true">→</span></a>
+  </article>
+  <article>
+    <p class="eyebrow">Operations</p>
+    <h3>URL preview tool</h3>
+    <p>Open the preview utility for the lab investigation workflow.</p>
+    <a class="button ghost" href="/tools/preview">Open tool <span aria-hidden="true">→</span></a>
+  </article>
+</section>
+{% endblock %}
