@@ -1,7 +1,19 @@
-{% extends "base.html" %}{% block title %}Account | LedgerLeak{% endblock %}{% block content %}
-<section class="form-card"><p class="eyebrow">FINTRUST ACCOUNT</p><h1>{{ 'Create account' if mode == 'register' else 'Welcome back' }}</h1>
-<form method="post"><label>Username<input name="username" required minlength="3" autocomplete="username"></label>
-<label>Password<input type="password" name="password" required {% if mode == 'register' %}minlength="10"{% endif %} autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}"></label>
-<button class="button" type="submit">{{ 'Register' if mode == 'register' else 'Sign in' }}</button></form>
-<p>{% if mode == 'register' %}Already registered? <a href="/login">Sign in</a>{% else %}New to FinTrust? <a href="/register">Create an account</a>{% endif %}</p></section>
+{% extends "base.html" %}
+{% block title %}{{ 'Create account' if mode == 'register' else 'Sign in' }} | LedgerLeak{% endblock %}
+{% block content %}
+<section class="form-card">
+  <p class="eyebrow">FinTrust account</p>
+  <h1>{{ 'Create your account' if mode == 'register' else 'Welcome back' }}</h1>
+  <p class="lead">{{ 'Create an account to manage your support requests.' if mode == 'register' else 'Sign in to continue to your support workspace.' }}</p>
+  <form method="post">
+    <label for="username">Username
+      <input id="username" name="username" required minlength="3" autocomplete="username" placeholder="Choose a username">
+    </label>
+    <label for="password">Password
+      <input id="password" type="password" name="password" required {% if mode == 'register' %}minlength="10"{% endif %} autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" placeholder="{{ 'At least 10 characters' if mode == 'register' else 'Enter your password' }}">
+    </label>
+    <button class="button" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }} <span aria-hidden="true">→</span></button>
+  </form>
+  <p class="tool-note">{% if mode == 'register' %}Already registered? <a href="/login">Sign in instead</a>{% else %}New to FinTrust? <a href="/register">Create an account</a>{% endif %}</p>
+</section>
 {% endblock %}
