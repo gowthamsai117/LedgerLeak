@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block content %}<div class="page-head"><div><p class="eyebrow">CUSTOMER OPERATIONS</p><h1>Your tickets</h1></div><a class="button" href="/tickets/new">New ticket</a></div>
+{% if tickets %}<div class="ticket-list">{% for ticket in tickets %}<article><div><span class="status">{{ ticket.status }}</span><h3><a href="/ticket/{{ ticket.id }}">{{ ticket.subject }}</a></h3><p>{{ ticket.body }}</p></div><a href="/ticket/{{ ticket.id }}">View →</a></article>{% endfor %}</div>{% else %}<p>No tickets yet.</p>{% endif %}{% endblock %}
