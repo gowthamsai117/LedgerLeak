@@ -1,1 +1,12 @@
-{% extends "base.html" %}{% block content %}<p class="eyebrow">CASE #{{ ticket.id }}</p><h1>{{ ticket.subject }}</h1><span class="status">{{ ticket.status }}</span><article class="ticket-body"><h3>Customer message</h3><p>{{ ticket.body }}</p></article><p><a href="/tickets">← Back to tickets</a></p>{% endblock %}
+{% extends "base.html" %}
+{% block title %}Ticket #{{ ticket.id }} | LedgerLeak{% endblock %}
+{% block content %}
+<p class="eyebrow">Support case #{{ ticket.id }}</p>
+<h1>{{ ticket.subject }}</h1>
+<span class="status">{{ ticket.status }}</span>
+<article class="ticket-body">
+  <h3>Customer message</h3>
+  <p style="white-space:pre-wrap;line-height:1.75">{{ ticket.body }}</p>
+</article>
+<div class="actions"><a class="button ghost" href="/tickets">← Back to tickets</a><a class="button" href="/tickets/new">Open another ticket <span aria-hidden="true">→</span></a></div>
+{% endblock %}
