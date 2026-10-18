@@ -1,3 +1,24 @@
-{% extends "base.html" %}{% block content %}<p class="eyebrow">OPERATIONS UTILITY</p><h1>URL Preview</h1><p class="lead">Fetch a URL to inspect a response during support investigations.</p>
-<section class="form-card"><form method="post"><label>Target URL<input type="url" name="url" placeholder="http://example.test/" required></label><button class="button" type="submit">Fetch preview</button></form>
-{% if result %}<h3>Preview result</h3>{% if result.status %}<p>HTTP status: {{ result.status }}</p>{% endif %}{% if result.error %}<p>{{ result.error }}</p>{% endif %}<pre>{{ result.body or '' }}</pre>{% endif %}</section>{% endblock %}
+{% extends "base.html" %}
+{% block title %}URL Preview | LedgerLeak{% endblock %}
+{% block content %}
+<p class="eyebrow">Operations utility</p>
+<h1>URL Preview</h1>
+<p class="lead">Fetch a URL to inspect a response during support investigations.</p>
+<section class="form-card">
+  <form method="post">
+    <label for="url">Target URL
+      <input id="url" type="url" name="url" placeholder="http://example.test/" required>
+    </label>
+    <button class="button" type="submit">Fetch preview <span aria-hidden="true">→</span></button>
+  </form>
+  <p class="tool-note">Training environment only. Use this utility only against targets permitted by the challenge.</p>
+  {% if result %}
+    <div class="result-head">
+      <h2>Preview result</h2>
+      {% if result.status %}<span class="status">HTTP {{ result.status }}</span>{% endif %}
+      {% if result.error %}<p class="flash error" role="alert">{{ result.error }}</p>{% endif %}
+      <pre>{{ result.body or '' }}</pre>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
