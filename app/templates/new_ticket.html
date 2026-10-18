@@ -1,1 +1,21 @@
-{% extends "base.html" %}{% block content %}<section class="form-card"><p class="eyebrow">CUSTOMER OPERATIONS</p><h1>Open a ticket</h1><form method="post"><label>Subject<input name="subject" maxlength="160" required></label><label>Describe your issue<textarea name="body" rows="6" maxlength="4000" required></textarea></label><button class="button" type="submit">Submit ticket</button></form></section>{% endblock %}
+{% extends "base.html" %}
+{% block title %}New support ticket | LedgerLeak{% endblock %}
+{% block content %}
+<section class="form-card">
+  <p class="eyebrow">Customer operations</p>
+  <h1>Open a ticket</h1>
+  <p class="lead">Tell us what happened. Include enough detail to help the support team understand your issue.</p>
+  <form method="post">
+    <label for="subject">Ticket subject
+      <input id="subject" name="subject" maxlength="160" placeholder="e.g. Duplicate payment on my account" required>
+    </label>
+    <label for="body">Describe your issue
+      <textarea id="body" name="body" rows="6" maxlength="4000" placeholder="Add the relevant details here..." required></textarea>
+    </label>
+    <div class="actions">
+      <button class="button" type="submit">Submit ticket <span aria-hidden="true">→</span></button>
+      <a class="button ghost" href="/tickets">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
